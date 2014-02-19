@@ -502,13 +502,13 @@ NSUInteger DeviceSystemMajorVersion() {
     // Lower Handle Handle
     self.lowerHandle = [[UIImageView alloc] initWithImage:self.lowerHandleImageNormal highlightedImage:self.lowerHandleImageHighlighted];
     self.lowerHandle.frame = [self thumbRectForValue:_lowerValue image:self.lowerHandleImageNormal];
-    self.lowerHandle.contentMode = UIViewContentModeLeft;
+    self.lowerHandle.contentMode = UIViewContentModeCenter;
     
     //------------------------------
     // Upper Handle Handle
     self.upperHandle = [[UIImageView alloc] initWithImage:self.upperHandleImageNormal highlightedImage:self.upperHandleImageHighlighted];
     self.upperHandle.frame = [self thumbRectForValue:_upperValue image:self.upperHandleImageNormal];
-    self.lowerHandle.contentMode = UIViewContentModeRight;
+    self.upperHandle.contentMode = UIViewContentModeCenter;
     
     [self addSubview:self.trackBackground];
     [self addSubview:self.track];

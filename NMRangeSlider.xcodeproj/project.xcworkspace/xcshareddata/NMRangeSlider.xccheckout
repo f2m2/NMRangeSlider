@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>38C6A0F6-20E3-4778-81FF-5DB7389F2812</string>
+	<key>IDESourceControlProjectName</key>
+	<string>NMRangeSlider</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F8CEB1DD-A864-458D-9927-74076EE8A25A</key>
+		<string>https://github.com/f2m2/NMRangeSlider.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>NMRangeSlider.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F8CEB1DD-A864-458D-9927-74076EE8A25A</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/f2m2/NMRangeSlider.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F8CEB1DD-A864-458D-9927-74076EE8A25A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F8CEB1DD-A864-458D-9927-74076EE8A25A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>NMRangeSlider</string>
+		</dict>
+	</array>
+</dict>
+</plist>

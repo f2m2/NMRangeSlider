@@ -465,7 +465,8 @@ NSUInteger DeviceSystemMajorVersion() {
     CGRect thumbRect;
     UIEdgeInsets insets = thumbImage.capInsets;
 
-    thumbRect.size = CGSizeMake(thumbImage.size.width, thumbImage.size.height);
+    //thumbRect.size = CGSizeMake(thumbImage.size.width, thumbImage.size.height);
+    thumbRect.size = CGSizeMake(44, 44);
     
     if(insets.top || insets.bottom)
     {

@@ -143,7 +143,7 @@ NSUInteger DeviceSystemMajorVersion() {
     {
         value = roundf(value / _stepValueInternal) * _stepValueInternal;
     }
-
+    
     value = MAX(value, _minimumValue);
     value = MIN(value, _maximumValue);
     
@@ -154,7 +154,7 @@ NSUInteger DeviceSystemMajorVersion() {
     value = MAX(value, _lowerValue+_minimumRange);
     
     _upperValue = value;
-
+    
     [self setNeedsLayout];
 }
 
@@ -197,7 +197,7 @@ NSUInteger DeviceSystemMajorVersion() {
     {
         setValuesBlock();
     }
-
+    
 }
 
 - (void)setLowerValue:(float)lowerValue animated:(BOOL) animated
@@ -304,7 +304,7 @@ NSUInteger DeviceSystemMajorVersion() {
             UIImage* image = [UIImage imageNamed:@"slider-default7-handle"];
             _lowerHandleImageNormal = image;
         }
-
+        
     }
     
     return _lowerHandleImageNormal;
@@ -421,7 +421,7 @@ NSUInteger DeviceSystemMajorVersion() {
     
     retValue.origin = CGPointMake(xLowerValue, (self.bounds.size.height/2.0f) - (retValue.size.height/2.0f));
     retValue.size.width = xUpperValue-xLowerValue;
-
+    
     return retValue;
 }
 
@@ -438,7 +438,7 @@ NSUInteger DeviceSystemMajorVersion() {
 }
 
 //returns the rect for the background image
- -(CGRect) trackBackgroundRect
+-(CGRect) trackBackgroundRect
 {
     CGRect trackBackgroundRect;
     
@@ -464,7 +464,7 @@ NSUInteger DeviceSystemMajorVersion() {
 {
     CGRect thumbRect;
     UIEdgeInsets insets = thumbImage.capInsets;
-
+    
     //thumbRect.size = CGSizeMake(thumbImage.size.width, thumbImage.size.height);
     thumbRect.size = CGSizeMake(44, 44);
     
@@ -477,14 +477,13 @@ NSUInteger DeviceSystemMajorVersion() {
     thumbRect.origin = CGPointMake(xValue, (self.bounds.size.height/2.0f) - (thumbRect.size.height/2.0f));
     
     return CGRectIntegral(thumbRect);
-
+    
 }
 
 // ------------------------------------------------------------------------------------------------------
 
 #pragma mark -
 #pragma mark - Layout
-
 
 - (void) addSubviews
 {
@@ -534,11 +533,11 @@ NSUInteger DeviceSystemMajorVersion() {
     {
         _upperValue = _maximumValue;
     }
-
+    
     self.trackBackground.frame = [self trackBackgroundRect];
     self.track.frame = [self trackRect];
     self.track.image = [self trackImageForCurrentValues];
-
+    
     // Layout the lower handle
     self.lowerHandle.frame = [self thumbRectForValue:_lowerValue image:self.lowerHandleImageNormal];
     self.lowerHandle.image = self.lowerHandleImageNormal;
@@ -555,7 +554,7 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (CGSize)intrinsicContentSize
 {
-   return CGSizeMake(UIViewNoIntrinsicMetric, MAX(self.lowerHandleImageNormal.size.height, self.upperHandleImageNormal.size.height));
+    return CGSizeMake(UIViewNoIntrinsicMetric, MAX(self.lowerHandleImageNormal.size.height, self.upperHandleImageNormal.size.height));
 }
 
 // ------------------------------------------------------------------------------------------------------
@@ -563,15 +562,24 @@ NSUInteger DeviceSystemMajorVersion() {
 #pragma mark -
 #pragma mark - Touch handling
 
-// The handle size can be a little small, so i make it a little bigger
-// TODO: Do it the correct way. I think wwdc 2012 had a video on it...
-- (CGRect) touchRectForHandle:(UIImageView*) handleImageView
+- (CGRect) touchRectForHandle:(UIImageView*)handleImageView asUpper:(BOOL)upper
 {
-    float xPadding = 5;
-    float yPadding = 5; //(self.bounds.size.height-touchRect.size.height)/2.0f
-
-    // expands rect by xPadding in both x-directions, and by yPadding in both y-directions
-    CGRect touchRect = CGRectInset(handleImageView.frame, -xPadding, -yPadding);;
+    float xPadding = 40;
+    
+    float value = self.lowerValue;
+    float xOrigin = 20;
+    if (upper) {
+        xOrigin = 40;
+        xPadding = 20;
+        value = self.upperValue;
+        
+    }
+    
+    CGRect touchRect = CGRectMake(value*CGRectGetWidth(self.frame) - xOrigin,
+                                  CGRectGetMinY(handleImageView.frame),
+                                  xPadding*2,
+                                  CGRectGetHeight(handleImageView.frame));
+    
     return touchRect;
 }
 
@@ -579,25 +587,22 @@ NSUInteger DeviceSystemMajorVersion() {
 {
     CGPoint touchPoint = [touch locationInView:self];
     
-    
-    //Check both buttons upper and lower thumb handles because
-    //they could be on top of each other.
-    
-    if(CGRectContainsPoint([self touchRectForHandle:_lowerHandle], touchPoint))
+    if(CGRectContainsPoint([self touchRectForHandle:_lowerHandle asUpper:NO], touchPoint) )
     {
         _lowerHandle.highlighted = YES;
         _lowerTouchOffset = touchPoint.x - _lowerHandle.center.x;
-    }
-    
-    if(CGRectContainsPoint([self touchRectForHandle:_upperHandle], touchPoint))
-    {
+        return YES;
+        
+    } else if (CGRectContainsPoint([self touchRectForHandle:_upperHandle asUpper:YES], touchPoint)){
         _upperHandle.highlighted = YES;
         _upperTouchOffset = touchPoint.x - _upperHandle.center.x;
+        _stepValueInternal= _stepValueContinuously ? _stepValue : 0.0f;
+        return YES;
+        
+    } else {
+        return NO;
     }
     
-    _stepValueInternal= _stepValueContinuously ? _stepValue : 0.0f;
-    
-    return YES;
 }
 
 
@@ -633,7 +638,7 @@ NSUInteger DeviceSystemMajorVersion() {
     if(_upperHandle.highlighted )
     {
         float newValue = [self upperValueForCenterX:(touchPoint.x - _upperTouchOffset)];
-
+        
         //if both upper and lower is selected, then the new value must be HIGHER
         //otherwise the touch event is ignored.
         if(!_lowerHandle.highlighted || newValue>_upperValue)
@@ -647,7 +652,7 @@ NSUInteger DeviceSystemMajorVersion() {
             _upperHandle.highlighted=NO;
         }
     }
-     
+    
     
     //send the control event
     if(_continuous)
@@ -657,7 +662,7 @@ NSUInteger DeviceSystemMajorVersion() {
     
     //redraw
     [self setNeedsLayout];
-
+    
     return YES;
 }
 

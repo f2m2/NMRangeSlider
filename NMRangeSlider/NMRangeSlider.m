@@ -564,20 +564,21 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (CGRect) touchRectForHandle:(UIImageView*)handleImageView asUpper:(BOOL)upper
 {
-    float xPadding = 40;
+    float xPadding = 50;
     
     float value = self.lowerValue;
     float xOrigin = 20;
+    
     if (upper) {
         xOrigin = 40;
-        xPadding = 20;
+        xPadding = 80;
         value = self.upperValue;
         
     }
     
     CGRect touchRect = CGRectMake(value*CGRectGetWidth(self.frame) - xOrigin,
                                   CGRectGetMinY(handleImageView.frame),
-                                  xPadding*2,
+                                  xPadding,
                                   CGRectGetHeight(handleImageView.frame));
     
     return touchRect;
@@ -586,17 +587,21 @@ NSUInteger DeviceSystemMajorVersion() {
 -(BOOL) beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     CGPoint touchPoint = [touch locationInView:self];
-    
-    if(CGRectContainsPoint([self touchRectForHandle:_lowerHandle asUpper:NO], touchPoint) )
+    CGRect lowerRectForHandle = [self touchRectForHandle:_lowerHandle asUpper:NO];
+    CGRect upperRectForHandle = [self touchRectForHandle:_upperHandle asUpper:YES];
+    if(CGRectContainsPoint(lowerRectForHandle, touchPoint) )
     {
         _lowerHandle.highlighted = YES;
         _lowerTouchOffset = touchPoint.x - _lowerHandle.center.x;
+        _stepValueInternal= _stepValueContinuously ? _stepValue : 0.0f;
         return YES;
         
-    } else if (CGRectContainsPoint([self touchRectForHandle:_upperHandle asUpper:YES], touchPoint)){
+    } else if (CGRectContainsPoint(upperRectForHandle, touchPoint)){
+        
         _upperHandle.highlighted = YES;
         _upperTouchOffset = touchPoint.x - _upperHandle.center.x;
         _stepValueInternal= _stepValueContinuously ? _stepValue : 0.0f;
+        
         return YES;
         
     } else {
